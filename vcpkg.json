@@ -1,0 +1,9 @@
+{
+  "name": "scopehttp",
+  "version-string": "1.0.0",
+  "description": "A lightweight Windows web server built with Crow",
+  "builtin-baseline": "39d1ce0cdd6a0eb557d57c07e1729b37c4002e2d",
+  "dependencies": [
+    "crow"
+  ]
+}

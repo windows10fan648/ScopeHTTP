@@ -1,0 +1,6 @@
+/build/
+/build-vs18/
+/.vs/
+*.user
+*.suo
+*.vcxproj*
