@@ -1,5 +1,6 @@
 /build/
 /build-vs18/
+/build-vs18-arm64/
 /.vs/
 *.user
 *.suo
