@@ -11,6 +11,17 @@
         "CMAKE_TOOLCHAIN_FILE": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake",
         "VCPKG_TARGET_TRIPLET": "x64-windows"
       }
+    },
+    {
+      "name": "windows-arm64-vcpkg",
+      "displayName": "Windows ARM64 with vcpkg",
+      "generator": "Visual Studio 18 2026",
+      "architecture": "ARM64",
+      "binaryDir": "${sourceDir}/build-vs18-arm64",
+      "cacheVariables": {
+        "CMAKE_TOOLCHAIN_FILE": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake",
+        "VCPKG_TARGET_TRIPLET": "arm64-windows"
+      }
     }
   ]
 }

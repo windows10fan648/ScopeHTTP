@@ -15,9 +15,8 @@ namespace fs = std::filesystem;
 namespace {
 
 constexpr unsigned short kPort = 8080;
+constexpr unsigned int kConcurrency = 2;
 
-// Resolve the document root beside the executable. SCOPEHTTP_PUBLIC_DIR is
-// supported for deployments that keep assets in a separate location.
 fs::path public_directory(int argc, char* argv[])
 {
     if (const char* configured = std::getenv("SCOPEHTTP_PUBLIC_DIR");
@@ -47,8 +46,6 @@ bool is_inside(const fs::path& root, const fs::path& candidate)
 
 crow::response file_response(const fs::path& public_root, const std::string& url_path)
 {
-    // Crow decodes the route parameter before invoking the handler. Reject
-    // absolute paths and traversal components before filesystem resolution.
     const fs::path requested(url_path);
     if (requested.is_absolute()) {
         return crow::response(400, "Invalid file path");
@@ -61,10 +58,6 @@ crow::response file_response(const fs::path& public_root, const std::string& url
     }
 
     crow::response response;
-    // The path has already been canonicalized and constrained to public_root,
-    // so bypass Crow's URL-oriented sanitizer. On Windows that sanitizer can
-    // misinterpret an absolute drive-qualified path such as C:\\... as a URL
-    // path and produce a 404.
     response.set_static_file_info_unsafe(resolved.string());
     return response;
 }
@@ -89,7 +82,7 @@ int main(int argc, char* argv[])
         app.server_name("ScopeHTTP/1.0")
            .bindaddr("127.0.0.1")
            .port(kPort)
-           .concurrency(2)
+           .concurrency(kConcurrency)
            .loglevel(crow::LogLevel::Info);
 
         CROW_ROUTE(app, "/")([index_file](crow::response& response) {
@@ -97,8 +90,6 @@ int main(int argc, char* argv[])
             response.end();
         });
 
-        // Files are available at /static/<path>, for example:
-        // /static/site.css or /static/images/logo.png.
         CROW_ROUTE(app, "/static/<path>")
         ([public_root](const std::string& path) {
             return file_response(public_root, path);

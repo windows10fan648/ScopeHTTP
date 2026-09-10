@@ -8,7 +8,14 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 
 find_package(Crow CONFIG REQUIRED)
 
-add_executable(ScopeHTTP main.cpp)
+if(CMAKE_GENERATOR_PLATFORM MATCHES "^[Aa][Rr][Mm]64$" OR
+   CMAKE_SYSTEM_PROCESSOR MATCHES "^[Aa][Rr][Mm]64$")
+    set(SCOPEHTTP_SOURCE arm64.cpp)
+else()
+    set(SCOPEHTTP_SOURCE x64.cpp)
+endif()
+
+add_executable(ScopeHTTP ${SCOPEHTTP_SOURCE})
 
 target_link_libraries(ScopeHTTP PRIVATE Crow::Crow)
 
@@ -24,6 +31,13 @@ target_compile_definitions(ScopeHTTP PRIVATE
 
 if(MSVC)
     target_compile_options(ScopeHTTP PRIVATE /W4 /permissive-)
+    if(SCOPEHTTP_SOURCE STREQUAL "arm64.cpp")
+        target_compile_options(ScopeHTTP PRIVATE
+            "$<$<CONFIG:Release>:/O2>"
+            "$<$<CONFIG:Release>:/Oi>"
+            "$<$<CONFIG:Release>:/Ot>"
+        )
+    endif()
 else()
     target_compile_options(ScopeHTTP PRIVATE -Wall -Wextra -Wpedantic)
 endif()

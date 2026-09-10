@@ -27,6 +27,12 @@ The included `vcpkg.json` declares Crow, so this project uses vcpkg manifest mod
 vcpkg install --triplet x64-windows
 ```
 
+For a Windows ARM64 build, use the ARM64 preset and triplet instead:
+
+```powershell
+vcpkg install --triplet arm64-windows
+```
+
 Do not append `crow` to that command; individual package arguments are not accepted in manifest mode. vcpkg will install Crow and its Asio dependency from `vcpkg.json`.
 
 The manifest includes a `builtin-baseline` so vcpkg can resolve versions reproducibly. If your local vcpkg checkout is older than that baseline, update the manifest from the checkout you are using:
@@ -45,6 +51,16 @@ $env:VCPKG_ROOT = "C:\src\vcpkg"
 cmake --preset windows-vcpkg
 cmake --build build-vs18 --config Release
 ```
+
+On ARM64, use:
+
+```powershell
+cmake --preset windows-arm64-vcpkg
+cmake --build build-vs18-arm64 --config Release
+```
+
+CMake selects `x64.cpp` for x64 builds and `arm64.cpp` for ARM64 builds. The
+ARM64 variant scales its HTTP worker count to the available processor cores.
 
 If you do not use a preset, the equivalent commands are:
 
