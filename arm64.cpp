@@ -18,7 +18,7 @@ namespace {
 
 constexpr unsigned short kPort = 8080;
 
-unsigned int concurrency()
+unsigned int worker_count()
 {
     // Keep at least two workers for the request path, while allowing ARM64
     // systems with additional cores to process static-file requests in parallel.
@@ -90,7 +90,7 @@ int main(int argc, char* argv[])
         app.server_name("ScopeHTTP/1.0")
            .bindaddr("127.0.0.1")
            .port(kPort)
-           .concurrency(concurrency())
+           .concurrency(worker_count())
            .loglevel(crow::LogLevel::Info);
 
         CROW_ROUTE(app, "/")([index_file](crow::response& response) {

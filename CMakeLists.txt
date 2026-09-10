@@ -27,6 +27,7 @@ endif()
 
 target_compile_definitions(ScopeHTTP PRIVATE
     _WIN32_WINNT=0x0601
+    _CRT_SECURE_NO_WARNINGS
 )
 
 if(MSVC)
